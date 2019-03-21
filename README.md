@@ -1,40 +1,40 @@
 # KafkaLearning
 
-Properties props = new Properties();
-props.put("bootstrap.servers", "broker1:9092,broker2:9092");
-props.put("group.id", "CountryCounter");
-props.put("key.deserializer",  "org.apache.kafka.common.serialization.StringDeserializer");
-props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    Properties props = new Properties();
+    props.put("bootstrap.servers", "broker1:9092,broker2:9092");
+    props.put("group.id", "CountryCounter");
+    props.put("key.deserializer",  "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
-KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+    KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
 
-consumer.subscribe(Collections.singletonList("customerCountries")); //subscribe to single topic
+    consumer.subscribe(Collections.singletonList("customerCountries")); //subscribe to single topic
 
-consumer.subscribe(Pattern.compile("test.*"));
+    consumer.subscribe(Pattern.compile("test.*"));
 
-try {
-    while (true) { 1
-        ConsumerRecords<String, String> records = consumer.poll(100);
-        for (ConsumerRecord<String, String> record : records)
-        {
-            log.debug("topic = %s, partition = %d, offset = %d,"
-                customer = %s, country = %s\n",
-                record.topic(), record.partition(), record.offset(),
-                record.key(), record.value());
+    try {
+        while (true) { 1
+            ConsumerRecords<String, String> records = consumer.poll(100);
+            for (ConsumerRecord<String, String> record : records)
+            {
+                log.debug("topic = %s, partition = %d, offset = %d,"
+                    customer = %s, country = %s\n",
+                    record.topic(), record.partition(), record.offset(),
+                    record.key(), record.value());
 
-            int updatedCount = 1;
-            if (custCountryMap.countainsValue(record.value())) {
-                updatedCount = custCountryMap.get(record.value()) + 1;
+                int updatedCount = 1;
+                if (custCountryMap.countainsValue(record.value())) {
+                    updatedCount = custCountryMap.get(record.value()) + 1;
+                }
+                custCountryMap.put(record.value(), updatedCount)
+
+                JSONObject json = new JSONObject(custCountryMap);
+                System.out.println(json.toString(4))
             }
-            custCountryMap.put(record.value(), updatedCount)
-
-            JSONObject json = new JSONObject(custCountryMap);
-            System.out.println(json.toString(4))
         }
+    } finally {
+        consumer.close();
     }
-} finally {
-    consumer.close();
-}
 
 # Configuring Consumers
 
